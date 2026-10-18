@@ -1,0 +1,6 @@
+variable,coef,pct_effect,ci_low_pct,ci_high_pct
+area_10sqm,0.0935,9.8,9.68,9.92
+lease_10y,0.0897,9.38,9.34,9.42
+floor_10,0.0829,8.64,8.55,8.74
+mrt_100m,-0.0063,-0.62,-0.64,-0.61
+cbd_dist_km,-0.0314,-3.09,-3.11,-3.08

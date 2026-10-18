@@ -1,0 +1,23 @@
+# Look and feel of the dashboard (read automatically by `streamlit run app.py`)
+# Docs: https://docs.streamlit.io/develop/concepts/configuration/theming
+
+[theme]
+base = "light"
+primaryColor = "#1d5fb4"              # HDB blue: sliders, selected tabs, tags
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f2f5f8"  # light grey-blue panels
+textColor = "#17283b"                 # dark ink instead of pure black
+borderColor = "#d9e1ea"
+linkColor = "#1d5fb4"
+baseRadius = "0.5rem"
+showWidgetBorder = true
+# Serif headings, normal sans-serif body text
+headingFont = "Source Serif 4:https://fonts.googleapis.com/css2?family=Source+Serif+4:wght@600&display=swap"
+headingFontSizes = ["2.4rem", "1.6rem", "1.3rem", "1.1rem"]
+metricValueFontSize = "1.9rem"
+# Same colours as the charts in app.py (SERIES_COLORS)
+chartCategoricalColors = ["#2a78d6", "#eb6834", "#1baf7a", "#eda100", "#e87ba4", "#6250d6"]
+
+[theme.sidebar]
+backgroundColor = "#f2f5f8"
+secondaryBackgroundColor = "#ffffff"

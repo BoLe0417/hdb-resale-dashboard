@@ -1,0 +1,27 @@
+# Raw HDB data (about 24 MB) is downloaded by src/download_data.py, so it is not tracked
+data/raw/*.csv
+data/raw/*.geojson
+data/raw/*.json
+# ...but the small MRT exit table is kept, so the dashboard works online
+!data/raw/mrt_station_exits.csv
+
+# Python environment and cache
+.venv/
+venv/
+__pycache__/
+*.pyc
+
+# Editor and system files
+.vscode/
+.DS_Store
+Thumbs.db
+
+# Word / PowerPoint lock files
+~$*
+
+# Secrets (never upload)
+.env
+.streamlit/secrets.toml
+
+# Local helper scripts and logs (not part of the project)
+_local_*

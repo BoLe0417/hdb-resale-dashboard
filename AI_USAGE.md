@@ -7,6 +7,7 @@
 | Tool | Link | Used by |
 |---|---|---|
 | Claude (Anthropic) | https://claude.ai | Ma Tianjiao, Deng Shenbojia |
+| _add other tools here_ | | |
 
 ## How we used GenAI
 

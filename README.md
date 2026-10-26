@@ -67,10 +67,11 @@ The HDB data are updated regularly. Our results use the version downloaded on **
 │   ├── building_coords.py    3a. Block locations from the NUS 3D HDB dataset
 │   ├── geocode_blocks.py     3b. Remaining block locations (OneMap)
 │   ├── wrangle.py            4. Clean data and add new variables
-│   └── make_tables.py        5. Summary tables used in this README
+│   ├── make_tables.py        5. Summary tables used in this README
+│   └── make_figures.py       6. Figures used in this README and the presentation
 └── outputs/
     ├── tables/               Generated tables (CSV)
-    ├── figures/              Figures used in the presentation
+    ├── figures/              Figures (PNG) used in this README and the presentation
     └── presentation/         Presentation deck
 ```
 
@@ -94,6 +95,7 @@ python src/building_coords.py      # optional: block locations are already in da
 python src/geocode_blocks.py       # optional: same
 python src/wrangle.py              # -> data/processed/hdb_resale_clean.parquet
 python src/make_tables.py          # -> outputs/tables/
+python src/make_figures.py         # -> outputs/figures/ (run after make_tables.py)
 
 # 4. Start the dashboard
 streamlit run app.py
@@ -138,15 +140,23 @@ Sidebar filters: flat type, price measure (per sqm or total), years, towns, and 
 
 ## 8. Key findings
 
-_The figures below come from `python src/make_tables.py` (data up to Oct 2026)._
+_The numbers below come from `python src/make_tables.py` and the charts from `python src/make_figures.py` (data up to Oct 2026)._
 
 ### 1. Prices rose a lot, and unevenly
 
+![Median 4-room resale price per quarter](outputs/figures/01_price_trend_4room.png)
+
 - The median **4-room** resale price rose from **$400,000 (2019)** to **$630,000 (2025)**: **+$230,000, +57%**. Per square metre it rose from $4,188 to $6,634 (+58%). The rise was steady: +6% by 2020, +19% by 2021, +39% by 2023 and +58% by 2025 (per sqm, [table](outputs/tables/yearly_change_vs_2019_4room.csv)).
 - Growth differed widely between towns ([table](outputs/tables/town_growth_4room.csv)). In **%** terms, **Central Area +86%**, **Sembawang +82%**, **Clementi +80%** and **Toa Payoh +77%** grew most; **Marine Parade +35%**, **Queenstown +36%** and **Bukit Merah +36%** grew least.
+![Change in median 4-room price by town, 2019 to 2025](outputs/figures/02_town_growth_ranking.png)
+
 - **% and S$ rankings differ.** Queenstown ranks 24th of 25 towns by % change but **7th in dollars (+$260,000)**, and Bukit Merah 23rd by % but 8th in dollars (+$248,000), because they started from high prices. Sembawang is 2nd by % but 5th in dollars (+$282,000), and Yishun 10th by % but 19th in dollars (+$210,000).
+![% change versus S$ change by town](outputs/figures/03_pct_vs_sgd_change.png)
+
 - Several cheaper towns (Sembawang, Woodlands, Bukit Batok, Choa Chu Kang) grew faster than the most expensive ones, but the link is weak and part of it is a *mix effect* (newer flats entering the resale market).
 - **Million-dollar HDB flats** went from **64 sales in 2019 to 1,593 in 2025** ([table](outputs/tables/million_dollar_flats.csv)).
+
+![Million-dollar HDB resale flats per year](outputs/figures/04_million_dollar_flats.png)
 
 ### 2. What makes a flat more valuable?
 
@@ -158,6 +168,8 @@ Comparing flats one factor at a time (4-room, 2025, [table](outputs/tables/mrt_b
 | 400–799 m | $6,392 | 72 years | 4,060 |
 | 800–1,199 m | $6,300 | 73 years | 1,893 |
 | 1,200 m + | $6,398 | 89 years | 787 |
+
+![Median price per sqm by distance to MRT, 4-room, 2025](outputs/figures/05_mrt_distance_4room_2025.png)
 
 Flats within a 5-minute walk of an MRT exit cost about **11% more per sqm** than flats 1.2 km+ away. The far group looks surprisingly expensive only because it contains many **new flats with long leases** (median 89 years left), which shows why we need to hold other factors equal.
 
@@ -171,7 +183,13 @@ Flats within a 5-minute walk of an MRT exit cost about **11% more per sqm** than
 | +100 m further from MRT | −0.6% | −0.64% to −0.61% |
 | +1 km further from the CBD | −3.1% | −3.1% to −3.1% |
 
+![Regression effects with 95% confidence intervals](outputs/figures/06_regression_effects.png)
+
 For example, an otherwise identical flat 1 km from the MRT instead of next to it sells for roughly 6% less, and one 10 km further from the CBD for roughly 27% less. These are associations, not causal effects (see Limitations).
+
+Mapped by block, the most expensive flats per sqm cluster near the city centre, but some newer estates further out (e.g. in the north-east) are also expensive per sqm, consistent with the lease effect above.
+
+![Median price per sqm by HDB block, last 12 months](outputs/figures/07_map_price_per_sqm.png)
 
 ### 3. Helping someone choose
 

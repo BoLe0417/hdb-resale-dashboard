@@ -7,7 +7,6 @@
 | Tool | Link | Used by |
 |---|---|---|
 | Claude (Anthropic) | https://claude.ai | Ma Tianjiao, Deng Shenbojia |
-| _add other tools here (e.g. GitHub Copilot, if used)_ | | |
 
 ## How we used GenAI
 
@@ -28,7 +27,7 @@ The types of prompts used included: describing our research question and the pro
 - We checked HDB's official list of mature estates (hdb.gov.sg) against the list in `wrangle.py`.
 - We spot-checked block locations on the map, compared the SVY21 conversion with the `pyproj` library and with OneMap for sample blocks, and reviewed the match-quality summary.
 - We read the regression output ourselves and wrote the interpretation as associations, not causes.
-- _TODO (Shenbojia): describe your own checks, only what you actually did, e.g. "ran `python src/make_figures.py` and `streamlit run app.py` on my own computer, compared the numbers on the figures with `outputs/tables/`, and read and edited the README text so that I can explain every point."_
+- Deng Shenbojia ran `python src/make_figures.py` and `streamlit run app.py` himself (in a GitHub Codespace), checked the numbers in the dashboard screenshots against the README (and retook two screenshots so that the year settings matched), and read and edited the rewritten *Key findings* and *Limitations* so that he can explain every point. Deng Shenbojia used only Claude.
 - _Add any other checks you did._
 
 ## Responsibility

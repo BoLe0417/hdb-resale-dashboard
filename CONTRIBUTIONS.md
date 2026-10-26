@@ -12,10 +12,10 @@ This project was completed as group work for **DS608 Data Analytics for Economic
 | Data download and documentation | | | |
 | Data cleaning (`src/wrangle.py`) | | | |
 | Location data (MRT, geocoding) | | | |
-| Analysis and interpretation | | | |
+| Analysis and interpretation | | | ● |
 | Dashboard (`app.py`) | | | |
-| Presentation deck | | | |
-| Repository organisation and review | | | |
+| Presentation deck | | | ○ |
+| Repository organisation and review | | | ○ |
 
 Use ● for main responsibility and ○ for support.
 
@@ -29,7 +29,10 @@ Use ● for main responsibility and ○ for support.
 
 ## Deng Shenbojia
 
--
+- **Figures:** created `src/make_figures.py` (with help from Claude, see AI_USAGE.md), which draws the 7 charts in `outputs/figures/` (price trend, town growth by % and S$, million-dollar flats, MRT distance, regression effects, price map) using the same definitions as `make_tables.py`, and added them to the README.
+- **Interpretation:** rewrote the README's *Key findings* and *Limitations* in plain language, including why % and S$ rankings differ, why flats near the MRT cost more, and how the limitations affect our conclusions.
+- **Dashboard screenshots:** _(TODO: check after taking them)_ took screenshots of the main dashboard tabs for the README and the presentation (`outputs/figures/dashboard_*.png`).
+- _TODO (Shenbojia): add your part in the presentation and anything else you did._
 
 ## How we worked together
 

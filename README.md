@@ -140,27 +140,35 @@ Sidebar filters: flat type, price measure (per sqm or total), years, towns, and 
 
 ## 8. Key findings
 
-_The numbers below come from `python src/make_tables.py` and the charts from `python src/make_figures.py` (data up to Oct 2026)._
+_Numbers come from `python src/make_tables.py` and charts from `python src/make_figures.py` (data up to Oct 2026). Unless we say otherwise, we look at **4-room flats**, the most common type, so that we compare similar homes._
 
-### 1. Prices rose a lot, and unevenly
+### 1. Prices went up a lot after COVID, but not equally everywhere
 
 ![Median 4-room resale price per quarter](outputs/figures/01_price_trend_4room.png)
 
-- The median **4-room** resale price rose from **$400,000 (2019)** to **$630,000 (2025)**: **+$230,000, +57%**. Per square metre it rose from $4,188 to $6,634 (+58%). The rise was steady: +6% by 2020, +19% by 2021, +39% by 2023 and +58% by 2025 (per sqm, [table](outputs/tables/yearly_change_vs_2019_4room.csv)).
-- Growth differed widely between towns ([table](outputs/tables/town_growth_4room.csv)). In **%** terms, **Central Area +86%**, **Sembawang +82%**, **Clementi +80%** and **Toa Payoh +77%** grew most; **Marine Parade +35%**, **Queenstown +36%** and **Bukit Merah +36%** grew least.
+- **The typical 4-room flat now costs much more.** The median price was **$400,000 in 2019** and **$630,000 in 2025**, so it went up by **$230,000 (+57%)**. The price per square metre went up by about the same amount (+58%, from $4,188 to $6,634).
+- **The rise was slow at first, then fast, and has now slowed down.** Prices hardly moved before 2020. Compared with 2019, the price per sqm was +6% in 2020, +19% in 2021, +39% in 2023 and +58% in 2025 ([table](outputs/tables/yearly_change_vs_2019_4room.csv)). Since mid-2025 the quarterly median has stayed around $630,000.
+- **Some towns went up much more than others** ([table](outputs/tables/town_growth_4room.csv)). The biggest % increases were in **Central Area (+86%)**, **Sembawang (+82%)**, **Clementi (+80%)** and **Toa Payoh (+77%)**. The smallest were in **Marine Parade (+35%)**, **Queenstown (+36%)** and **Bukit Merah (+36%)**.
+
 ![Change in median 4-room price by town, 2019 to 2025](outputs/figures/02_town_growth_ranking.png)
 
-- **% and S$ rankings differ.** Queenstown ranks 24th of 25 towns by % change but **7th in dollars (+$260,000)**, and Bukit Merah 23rd by % but 8th in dollars (+$248,000), because they started from high prices. Sembawang is 2nd by % but 5th in dollars (+$282,000), and Yishun 10th by % but 19th in dollars (+$210,000).
+- **Ranking towns by % and by dollars gives different answers.** The reason is the starting price. If two towns both go up by $260,000, the town that started cheaper shows a much bigger %. For example:
+  - **Queenstown** started high ($728,000) and went up by $260,000. That is only **+36%** (24th out of 25 towns), but in dollars it is **7th**.
+  - **Sembawang** started low ($343,000) and went up by $282,000. That is **+82%** (2nd), but in dollars it is only **5th**.
+  - **Yishun** is 10th by % but 19th by dollars (+$210,000).
+
+  For a buyer, the **dollar change** is what matters, because it is the extra money they need to pay or borrow. The **% change** is closer to an investment return. This is why the dashboard shows both.
+
 ![% change versus S$ change by town](outputs/figures/03_pct_vs_sgd_change.png)
 
-- Several cheaper towns (Sembawang, Woodlands, Bukit Batok, Choa Chu Kang) grew faster than the most expensive ones, but the link is weak and part of it is a *mix effect* (newer flats entering the resale market).
-- **Million-dollar HDB flats** went from **64 sales in 2019 to 1,593 in 2025** ([table](outputs/tables/million_dollar_flats.csv)).
+- **Cheaper towns caught up a little**, for example Sembawang, Woodlands, Bukit Batok and Choa Chu Kang. But this pattern is weak, and part of it is because **newer flats started to be resold** in these towns, which pushes the median up (see *mix effects* in Limitations).
+- **Million-dollar HDB flats are no longer rare.** There were **64** such sales in 2019 and **1,593** in 2025 ([table](outputs/tables/million_dollar_flats.csv)).
 
 ![Million-dollar HDB resale flats per year](outputs/figures/04_million_dollar_flats.png)
 
-### 2. What makes a flat more valuable?
+### 2. What makes a flat more expensive?
 
-Comparing flats one factor at a time (4-room, 2025, [table](outputs/tables/mrt_band_4room_2025.csv)):
+**First, one factor at a time: distance to the MRT** (4-room flats sold in 2025, [table](outputs/tables/mrt_band_4room_2025.csv)):
 
 | Distance to nearest MRT/LRT exit | Median price per sqm | Median lease left | Sales |
 |---|---|---|---|
@@ -171,40 +179,44 @@ Comparing flats one factor at a time (4-room, 2025, [table](outputs/tables/mrt_b
 
 ![Median price per sqm by distance to MRT, 4-room, 2025](outputs/figures/05_mrt_distance_4room_2025.png)
 
-Flats within a 5-minute walk of an MRT exit cost about **11% more per sqm** than flats 1.2 km+ away. The far group looks surprisingly expensive only because it contains many **new flats with long leases** (median 89 years left), which shows why we need to hold other factors equal.
+- Flats less than 400 m from an MRT exit (about a 5-minute walk) cost about **11% more per sqm** than flats more than 1.2 km away. The simple reason is **convenience**: people pay more to save time on their daily trip to work or school.
+- But the table also shows a surprise: the **farthest group is not the cheapest**. This is because many flats far from the MRT are **new**, with about 89 years of lease left, and a longer lease is worth more. So looking at one factor alone can mislead us. Other things change at the same time.
 
-**Regression** (all flat types, 2017–2026, 242,454 sales, R² = 0.89, [table](outputs/tables/regression_effects.csv)). Holding the other factors equal:
+**Second, all factors together.** To separate these effects, we used a **regression**. It compares flats that are the same in size, lease, floor, flat type, year and distance to the CBD, and then asks how much one factor changes the price (all flat types, 2017–2026, 242,454 sales, R² = 0.89, [table](outputs/tables/regression_effects.csv)):
 
-| Factor | Change in price | 95% CI |
+| If a flat has… | Its price is about… | 95% CI |
 |---|---|---|
-| +10 sqm floor area | +9.8% | 9.7% to 9.9% |
-| +10 years remaining lease | +9.4% | 9.3% to 9.4% |
-| +10 floors higher | +8.6% | 8.6% to 8.7% |
-| +100 m further from MRT | −0.6% | −0.64% to −0.61% |
-| +1 km further from the CBD | −3.1% | −3.1% to −3.1% |
+| 10 sqm more floor area | +9.8% | 9.7% to 9.9% |
+| 10 more years of lease left | +9.4% | 9.3% to 9.4% |
+| 10 floors higher | +8.6% | 8.6% to 8.7% |
+| 100 m further from the MRT | −0.6% | −0.64% to −0.61% |
+| 1 km further from the CBD | −3.1% | −3.1% to −3.1% |
 
 ![Regression effects with 95% confidence intervals](outputs/figures/06_regression_effects.png)
 
-For example, an otherwise identical flat 1 km from the MRT instead of next to it sells for roughly 6% less, and one 10 km further from the CBD for roughly 27% less. These are associations, not causal effects (see Limitations).
+- **Size, lease and floor matter most.** Each one moves the price by about 9%.
+- **Location still matters after we hold these equal.** A flat 1 km from the MRT sells for about **6% less** than the same flat right next to it, and a flat 10 km further from the CBD for about **27% less**.
+- These numbers show that things **move together**, not that one **causes** the other (see Limitations).
 
-Mapped by block, the most expensive flats per sqm cluster near the city centre, but some newer estates further out (e.g. in the north-east) are also expensive per sqm, consistent with the lease effect above.
+The map shows the same story: flats are most expensive per sqm near the city centre, but some newer estates further out (for example in the north-east) are also expensive, because their flats have long leases.
 
 ![Median price per sqm by HDB block, last 12 months](outputs/figures/07_map_price_per_sqm.png)
 
 ### 3. Helping someone choose
 
-The *Help me choose* tab turns these findings into a decision tool: a user sets a **budget**, a **minimum remaining lease** and a **maximum distance to the MRT**, and sees which towns had most recent sales within budget, plus a shortlist of specific blocks. For example, with $650,000, at least 60 years of lease and any MRT distance, at least half of recent 3-room sales were within budget in 11 towns, mostly in the north, north-east and west.
-
+The *Help me choose* tab turns these findings into a tool. The user sets a **budget**, a **minimum lease left** and a **maximum distance to the MRT**. The dashboard then shows which towns had most recent sales within that budget, and a shortlist of real blocks. For example, with **$650,000**, at least **60 years** of lease and any MRT distance, at least half of recent 3-room sales were within budget in **11 towns**, mostly in the north, north-east and west.
 
 ## 9. Limitations
 
-- **Resale prices are not rents**, so they only give a rough idea of how expensive an area is to live in.
-- **Prices are nominal**, not adjusted for inflation.
-- **Mix effects:** a town's median can rise because different flats are sold (e.g. newer flats reaching the 5-year minimum occupation period), not only because the same flats became more expensive.
-- **Distances are straight lines**, not walking routes, and use **today's MRT network** for all years (stations opened during 2017–2026, e.g. on the Thomson–East Coast Line, are counted for earlier sales too).
-- Block locations come from two sources (building centres from the NUS dataset, and OneMap address points for newer blocks). Both are accurate to within a few metres, which is small compared with our distance bands. Any address that could not be matched has no location and is left out of the location charts and regression.
-- The regression shows **associations, not causes**. Unobserved factors (schools, views, renovation, nearby malls) may be linked to both location and price.
-- The data cover **HDB resale flats only**, not new BTO flats or private property.
+These limits mean our results should be read as a **guide**, not exact answers.
+
+- **Resale prices are not rents.** We started from the question of how expensive an area is to live in, but our data are sale prices. They show which areas are expensive, not exactly what rent costs.
+- **Prices are not adjusted for inflation.** Part of the +57% rise is general inflation, so the "real" increase is smaller.
+- **Mix effects.** A town's median can go up just because **different flats are sold** that year (for example, new flats that reach the 5-year minimum stay and enter the resale market), not only because the same flats became more expensive. This can make some towns' growth look bigger than it is.
+- **Distances are straight lines, using today's MRT map.** Real walking distance is longer. Also, stations that opened during 2017–2026 (for example on the Thomson–East Coast Line) are counted for older sales too, before they existed. Both make our MRT effect less precise.
+- **Block locations come from two sources** (the NUS 3D HDB dataset for most blocks, OneMap for newer ones). Both are accurate to a few metres, which is small compared with our distance groups. Addresses that could not be matched are left out of the location charts and the regression.
+- **Association, not cause.** Things we do not measure, such as nearby schools, malls, views or renovation, can affect both location and price. So we cannot say that moving a flat closer to the MRT would *cause* its price to rise by a fixed amount.
+- **Only HDB resale flats.** New BTO flats and private property are not included.
 
 ## 10. AI usage and contributions
 

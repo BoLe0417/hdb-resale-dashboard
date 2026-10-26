@@ -117,7 +117,7 @@ streamlit run app.py
   - **S$ change** = median in year − median in 2019
 
   We report **both**, because ranking towns by % change does not identify the towns with the largest increases in dollars (see Findings).
-- **Only full years are compared.** 2026 only covers January–October, so it is excluded from every year-to-year comparison (it appears only in the quarterly trend chart if the user selects it, and in the map and "Help me choose" tab, which use the last 12 months).
+- **Only full years are compared.** 2026 only covers January–October, so it is excluded from every year-to-year comparison (it appears only in the quarterly trend chart if the user selects it, and in the map (last 24 months) and the "Help me choose" tab (last 12 months)).
 - Towns with fewer than 20 sales in either year are excluded from rankings.
 - **Comparing like with like.** Besides flat type and price per sqm, the dashboard lets users restrict the **remaining lease** and **floor level** ("Compare similar flats only"), since both affect prices. The dashboard's **About & method** tab explains all of this.
 - To separate overlapping factors (e.g. central flats are also older), we fit a **regression**:
@@ -137,6 +137,14 @@ streamlit run app.py
 | ℹ️ About & method | Research questions, how prices are compared across years, how we keep comparisons fair, limitations, sources |
 
 Sidebar filters: flat type, price measure (per sqm or total), years, towns, and **Compare similar flats only** (remaining lease and floor level).
+
+**Screenshots** (taken from the running dashboard; the settings used are visible in the sidebar where shown):
+
+| | |
+|---|---|
+| ![Overview tab: 2019 vs 2025, 4-room, price per sqm](outputs/figures/dashboard_01_overview.png) **Overview** (years 2019–2025) | ![Help me choose tab: $650k budget, 60+ years lease, 3-room](outputs/figures/dashboard_05_help_me_choose.png) **Help me choose** ($650k, 60+ years lease, 3-room) |
+| ![Town growth tab ranked by % change](outputs/figures/dashboard_02a_town_growth_pct.png) **Town growth by %** (total price, 2019→2025) | ![Town growth tab ranked by S$ change](outputs/figures/dashboard_02b_town_growth_sgd.png) **Town growth by S$** (same towns, different order) |
+| ![Why are some flats pricier tab: MRT and CBD distance, 2025](outputs/figures/dashboard_03_drivers_mrt.png) **Why are some flats pricier?** (2025 only) | ![Map tab: price per sqm by block with MRT stations](outputs/figures/dashboard_04_map.png) **Map** (4-room, last 24 months) |
 
 ## 8. Key findings
 
@@ -204,7 +212,7 @@ The map shows the same story: flats are most expensive per sqm near the city cen
 
 ### 3. Helping someone choose
 
-The *Help me choose* tab turns these findings into a tool. The user sets a **budget**, a **minimum lease left** and a **maximum distance to the MRT**. The dashboard then shows which towns had most recent sales within that budget, and a shortlist of real blocks. For example, with **$650,000**, at least **60 years** of lease and any MRT distance, at least half of recent 3-room sales were within budget in **11 towns**, mostly in the north, north-east and west.
+The *Help me choose* tab turns these findings into a tool. The user sets a **budget**, a **minimum lease left** and a **maximum distance to the MRT**. The dashboard then shows which towns had most recent sales within that budget, and a shortlist of real blocks. For example, with **$650,000**, at least **60 years** of lease and any MRT distance, at least half of recent 3-room sales were within budget in **15 towns**, almost all outside the central area (for example Woodlands, Yishun, Punggol, Sengkang, Jurong West and Tampines).
 
 ## 9. Limitations
 

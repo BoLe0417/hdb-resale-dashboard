@@ -31,7 +31,7 @@ Use ● for main responsibility and ○ for support.
 
 - **Figures:** created `src/make_figures.py` (with help from Claude, see AI_USAGE.md), which draws the 7 charts in `outputs/figures/` (price trend, town growth by % and S$, million-dollar flats, MRT distance, regression effects, price map) using the same definitions as `make_tables.py`, and added them to the README.
 - **Interpretation:** rewrote the README's *Key findings* and *Limitations* in plain language, including why % and S$ rankings differ, why flats near the MRT cost more, and how the limitations affect our conclusions.
-- **Dashboard screenshots:** _(TODO: check after taking them)_ took screenshots of the main dashboard tabs for the README and the presentation (`outputs/figures/dashboard_*.png`).
+- **Dashboard screenshots:** took 6 screenshots of the main dashboard tabs (`outputs/figures/dashboard_*.png`) for the README and the presentation, choosing settings so the numbers match the README; while checking them, found and fixed an outdated number in the README (15 towns within budget, not 11).
 - _TODO (Shenbojia): add your part in the presentation and anything else you did._
 
 ## How we worked together

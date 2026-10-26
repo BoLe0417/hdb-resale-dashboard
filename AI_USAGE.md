@@ -17,7 +17,7 @@ We acknowledge the use of **Claude (Anthropic)** to support **coding, debugging,
 - **Write and debug code:** draft the scripts in `src/` (download, geocoding, cleaning, summary tables) and the Streamlit dashboard `app.py`, and fix errors when running them.
 - **Extend the analysis after TA feedback:** suggest adding distance to the nearest MRT exit and to the CBD, an interactive map, and a regression that holds other factors equal.
 - **Documentation:** draft `README.md`, `data/DATA_SOURCES.md` and this file.
-- **Figures and interpretation (Deng Shenbojia):** write `src/make_figures.py` for the static charts in `outputs/figures/`; explain the findings (e.g. why % and S$ rankings differ, why MRT distance and lease length are mixed together) and suggest plainer wording for the *Key findings* and *Limitations* sections of the README.
+- **Figures and interpretation (Deng Shenbojia):** write `src/make_figures.py` for the static charts in `outputs/figures/`; Correct the incorrect explanations of the findings (e.g. why % and S$ rankings differ, why MRT distance and lease length are mixed together) and suggest plainer wording for the *Key findings* and *Limitations* sections of the README.
 
 The types of prompts used included: describing our research question and the proposal feedback, asking how to clean specific columns (e.g. `"61 years 04 months"`), asking for a dashboard layout that tells a clear story, and pasting error messages for debugging.
 

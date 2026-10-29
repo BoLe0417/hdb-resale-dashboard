@@ -8,6 +8,11 @@ The figures use the same definitions as src/make_tables.py (4-room flats,
 medians, 2019 as the base year, full years only) and the same colours as the
 dashboard (app.py), so numbers and colours match across README, slides and app.
 
+Figures 01-07 are drawn with Matplotlib. Figures 08-11 use Seaborn to show
+distributions (histogram + KDE, box plot, side-by-side comparison) and a
+regression line with its correlation, which the interactive dashboard does
+not show.
+
 Usage (run from the project root folder):
     python src/make_figures.py
 """
@@ -21,6 +26,7 @@ import matplotlib.ticker as mtick
 from matplotlib.colors import LinearSegmentedColormap
 import numpy as np
 import pandas as pd
+import seaborn as sns
 
 PROJECT_ROOT = Path(__file__).resolve().parent.parent
 DATA_FILE = PROJECT_ROOT / "data" / "processed" / "hdb_resale_clean.parquet"
@@ -328,6 +334,119 @@ def fig_map(four):
     save(fig, "07_map_price_per_sqm.png")
 
 
+# ---------------------------------------------------------------------------
+# 7. Distributions with Seaborn (figures 08-11)
+# ---------------------------------------------------------------------------
+def fig_hist_kde(four, end_year):
+    """Histogram + KDE of price per sqm for one year."""
+    data = four[four["year"] == end_year]
+    median = data["price_per_sqm"].median()
+    share = data["price_per_sqm"].between(5000, 8000).mean() * 100
+
+    fig, ax = plt.subplots()
+    sns.histplot(data=data, x="price_per_sqm", stat="density", kde=True,
+                 bins=60, color=BLUE, edgecolor="white", linewidth=0.5, ax=ax)
+    ax.axvline(median, color=INK, linewidth=1.2, linestyle="--")
+    ax.text(median + 150, ax.get_ylim()[1] * 0.92, f"Median: ${median:,.0f}",
+            color=INK, fontsize=12, fontweight="bold")
+    ax.xaxis.set_major_formatter(mtick.StrMethodFormatter("${x:,.0f}"))
+    ax.set_xlabel("Price per sqm")
+    ax.set_ylabel("Density")
+    # A backslash before "$" stops Matplotlib from reading text between two "$" signs as a formula
+    ax.set_title(f"{share:.0f}% of 4-room flats sold for \\$5,000-\\$8,000 per sqm in {end_year}")
+    subtitle(ax, f"Distribution of price per sqm, 4-room flats sold in {end_year} "
+                 f"({len(data):,} sales). Bars = histogram, line = KDE")
+    source(fig)
+    save(fig, f"08_hist_kde_psm_4room_{end_year}.png")
+
+
+def fig_box_by_town(four, end_year):
+    """Box plot of price per sqm by town, sorted by median."""
+    data = four[four["year"] == end_year]
+    counts = data["town"].value_counts()
+    data = data[data["town"].isin(counts[counts >= MIN_SALES].index)]
+    order = (data.groupby("town")["price_per_sqm"].median()
+             .sort_values(ascending=False).index)
+
+    fig, ax = plt.subplots(figsize=(10, 9))
+    sns.boxplot(data=data, x="price_per_sqm", y="town", order=order, color=LIGHT_BLUE,
+                width=0.6, linewidth=1, fliersize=1.5,
+                medianprops={"color": INK, "linewidth": 2}, ax=ax)
+    ax.xaxis.set_major_formatter(mtick.StrMethodFormatter("${x:,.0f}"))
+    ax.tick_params(axis="y", length=0, labelsize=11, labelcolor=INK)
+    ax.grid(axis="y", visible=False)
+    ax.set_xlabel("Price per sqm")
+    ax.set_ylabel("")
+    ax.set_title(f"Central towns cost more per sqm, and prices within them vary more ({end_year})")
+    subtitle(ax, f"Price per sqm, 4-room flats sold in {end_year}, towns sorted by median. "
+                 f"Box = middle 50% of sales, dots = unusual sales")
+    source(fig)
+    save(fig, f"09_box_psm_by_town_{end_year}.png")
+
+
+def fig_dist_compare(four, end_year):
+    """Price per sqm in the base year and the last full year, side by side."""
+    fig, axes = plt.subplots(nrows=1, ncols=2, figsize=(11, 5), sharex=True, sharey=True)
+    for ax, year, color in zip(axes, [BASE_YEAR, end_year], [LIGHT_BLUE, BLUE]):
+        data = four[four["year"] == year]
+        median = data["price_per_sqm"].median()
+        sns.histplot(data=data, x="price_per_sqm", stat="density", kde=True,
+                     bins=50, color=color, edgecolor="white", linewidth=0.5, ax=ax)
+        ax.axvline(median, color=INK, linewidth=1.2, linestyle="--")
+        ax.text(median + 150, ax.get_ylim()[1] * 0.92, f"Median ${median:,.0f}",
+                color=INK, fontsize=11, fontweight="bold")
+        ax.xaxis.set_major_locator(mtick.MultipleLocator(2000))
+        ax.xaxis.set_major_formatter(mtick.FuncFormatter(money))
+        ax.set_xlabel("Price per sqm")
+        ax.set_title(f"{year} ({len(data):,} sales)", pad=10, fontsize=14)
+    axes[0].set_ylabel("Density")
+    base = four.loc[four["year"] == BASE_YEAR, "price_per_sqm"].median()
+    end = four.loc[four["year"] == end_year, "price_per_sqm"].median()
+    fig.tight_layout(rect=(0, 0, 1, 0.84))
+    fig.text(0.01, 0.97, f"The whole price distribution moved right: median +{(end / base - 1) * 100:.0f}% "
+             f"from {BASE_YEAR} to {end_year}",
+             ha="left", va="top", fontsize=17, fontweight="bold", color=INK)
+    fig.text(0.01, 0.90, f"Price per sqm, 4-room flats, {BASE_YEAR} (left) vs {end_year} (right). "
+             "Same axes on both sides", ha="left", va="top", fontsize=12, color=MUTED)
+    source(fig)
+    save(fig, f"10_dist_{BASE_YEAR}_vs_{end_year}.png")
+
+
+def fig_town_mrt_regplot(four, end_year):
+    """Town medians: distance to MRT vs price per sqm, with a fitted line."""
+    data = four[(four["year"] == end_year) & four["mrt_dist_m"].notna()]
+    towns = (data.groupby("town")
+             .agg(mrt=("mrt_dist_m", "median"), psm=("price_per_sqm", "median"),
+                  sales=("price_per_sqm", "size")))
+    towns = towns[towns["sales"] >= MIN_SALES]
+    r = towns["mrt"].corr(towns["psm"])
+
+    fig, ax = plt.subplots()
+    sns.regplot(data=towns, x="mrt", y="psm", color=BLUE, ax=ax,
+                scatter_kws={"s": 70, "edgecolor": "white", "linewidths": 1.5},
+                line_kws={"color": ORANGE, "linewidth": 2})
+    labels = {"Central Area": (7, 0, "left"), "Toa Payoh": (7, 0, "left"),
+              "Queenstown": (7, 0, "left"), "Marine Parade": (7, 0, "left"),
+              "Punggol": (7, 0, "left"), "Choa Chu Kang": (7, 0, "left"),
+              "Yishun": (0, 14, "center")}
+    for town, (dx, dy, ha) in labels.items():
+        if town in towns.index:
+            ax.annotate(town, (towns.loc[town, "mrt"], towns.loc[town, "psm"]),
+                        xytext=(dx, dy), textcoords="offset points", ha=ha, va="center",
+                        fontsize=10, color=INK)
+    ax.text(0.98, 0.95, f"Correlation r = {r:.2f}\n{len(towns)} towns", transform=ax.transAxes,
+            ha="right", va="top", fontsize=13, fontweight="bold", color=INK)
+    ax.yaxis.set_major_formatter(mtick.StrMethodFormatter("${x:,.0f}"))
+    ax.xaxis.set_major_formatter(mtick.StrMethodFormatter("{x:,.0f} m"))
+    ax.set_xlabel("Median straight-line distance to the nearest MRT/LRT exit")
+    ax.set_ylabel("Median price per sqm")
+    ax.set_title(f"Towns further from the MRT tend to be cheaper per sqm (r = {r:.2f})")
+    subtitle(ax, f"Each dot is a town (4-room flats sold in {end_year}, towns with "
+                 f"{MIN_SALES}+ sales). Line = linear fit with 95% CI")
+    source(fig)
+    save(fig, f"11_town_mrt_vs_psm_{end_year}.png")
+
+
 def main():
     FIG_DIR.mkdir(parents=True, exist_ok=True)
     df = pd.read_parquet(DATA_FILE)
@@ -343,6 +462,11 @@ def main():
         fig_mrt(four, end_year)
         fig_map(four)
     fig_regression()
+    fig_hist_kde(four, end_year)
+    fig_box_by_town(four, end_year)
+    fig_dist_compare(four, end_year)
+    if "mrt_dist_m" in df.columns:
+        fig_town_mrt_regplot(four, end_year)
 
 
 if __name__ == "__main__":

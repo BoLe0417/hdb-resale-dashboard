@@ -6,3 +6,4 @@ statsmodels>=0.14
 plotly>=5.24
 streamlit>=1.50
 matplotlib>=3.8
+seaborn>=0.13

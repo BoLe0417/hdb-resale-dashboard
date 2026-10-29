@@ -174,6 +174,20 @@ _Numbers come from `python src/make_tables.py` and charts from `python src/make_
 
 ![Million-dollar HDB resale flats per year](outputs/figures/04_million_dollar_flats.png)
 
+**Looking at the whole spread of prices, not just the median** (Seaborn charts, 4-room flats, price per sqm):
+
+- **The whole range moved up, not only the middle.** In 2025 even the cheapest 5% of 4-room flats cost more per sqm (about $5,150) than the *median* flat in 2019 ($4,188).
+
+![Distribution of price per sqm, 2019 vs 2025](outputs/figures/10_dist_2019_vs_2025.png)
+
+- **Most flats are in a fairly narrow band, with a long tail of expensive ones.** In 2025, 75% of 4-room flats sold for $5,000-$8,000 per sqm. The long tail on the right is mostly flats in central towns.
+
+![Histogram and KDE of price per sqm, 4-room, 2025](outputs/figures/08_hist_kde_psm_4room_2025.png)
+
+- **Prices vary a lot inside some towns.** Central towns have the highest medians, but in towns such as Central Area, Clementi, Geylang and Ang Mo Kio the middle half of sales covers a very wide range. So a town's median alone can hide very different flats.
+
+![Box plot of price per sqm by town, 4-room, 2025](outputs/figures/09_box_psm_by_town_2025.png)
+
 ### 2. What makes a flat more expensive?
 
 **First, one factor at a time: distance to the MRT** (4-room flats sold in 2025, [table](outputs/tables/mrt_band_4room_2025.csv)):
@@ -189,6 +203,10 @@ _Numbers come from `python src/make_tables.py` and charts from `python src/make_
 
 - Flats less than 400 m from an MRT exit (about a 5-minute walk) cost about **11% more per sqm** than flats more than 1.2 km away. The simple reason is **convenience**: people pay more to save time on their daily trip to work or school.
 - But the table also shows a surprise: the **farthest group is not the cheapest**. This is because many flats far from the MRT are **new**, with about 89 years of lease left, and a longer lease is worth more. So looking at one factor alone can mislead us. Other things change at the same time.
+
+**The same pattern across towns.** Comparing towns (median distance to the MRT vs median price per sqm, 2025), towns further from the MRT tend to be cheaper, with a correlation of **r = -0.48**. This is only a moderate link: Bukit Panjang, for example, has flats very close to MRT/LRT stations (median about 250 m) but is one of the cheaper towns ($6,132 per sqm), probably because it is far from the city centre. This is another reason to look at all factors together.
+
+![Town distance to MRT vs price per sqm, with regression line](outputs/figures/11_town_mrt_vs_psm_2025.png)
 
 **Second, all factors together.** To separate these effects, we used a **regression**. It compares flats that are the same in size, lease, floor, flat type, year and distance to the CBD, and then asks how much one factor changes the price (all flat types, 2017–2026, 242,454 sales, R² = 0.89, [table](outputs/tables/regression_effects.csv)):
 
